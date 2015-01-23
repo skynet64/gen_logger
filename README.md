@@ -4,7 +4,7 @@ Erlang gen_logger behaviour.
 
 # Why
 
-When writing an erlang library, the logger is usally application-dependent. For exmaple, [emqttc](https://github.com/emqtt/emqttc) library is used in application with 'lager' logger: 
+When writing an erlang library, the logger is usally application-dependent. For exmaple, [emqttc] (https://github.com/emqtt/emqttc) library used in application with 'lager' logger: 
 
 ```
 {ok, C} = emqttc:start_link([{host, "localhost"}, {logger, lager}]).
