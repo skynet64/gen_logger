@@ -1,0 +1,12 @@
+{application, gen_logger,
+ [
+  {description, "An Erlang gen_logger library"},
+  {vsn, git},
+  {modules, [ ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
