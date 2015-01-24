@@ -2,15 +2,53 @@
 
 Erlang gen_logger behaviour.
 
-# Why
+## Why
 
 When writing an erlang library, the logger is usally application-dependent. For exmaple, [emqttc] (https://github.com/emqtt/emqttc) library used in application with 'lager' logger: 
 
 ```
-{ok, C} = emqttc:start_link([{host, "localhost"}, {logger, lager}]).
+{ok, C} = emqttc:start_link([{host, "localhost"}, {logger, {lager, info}}]).
 ```
 
-# Callbacks
+## Usage
+
+```
+
+Logger = gen_logger:new(debug).
+
+Logger:info("hello...").
+Logger:info("format: ~p", ["hello"]).
+
+Logger:error("error msg").
+Logger:error("format error msg", []).
+
+
+```
+
+# API 
+
+```
+-type level() :: all | debug | info | warning | error | critical | none.
+
+gen_logger:new(debug).
+
+%lager with debug
+gen_logger:new(lager, debug).
+
+%otp with info
+gen_logger:new(otp, info).
+
+%io:format error
+gen_logger:new(stdout, error).
+```
+
+## Behavior
+
+```
+-behavior(gen_logger).
+```
+
+## Callbacks
 
 ```
 
@@ -31,7 +69,7 @@ When writing an erlang library, the logger is usally application-dependent. For 
 
 ```
 
-# Define a logger
+## Define a logger
 
 ```
 -module(my_logger).
@@ -46,6 +84,12 @@ When writing an erlang library, the logger is usally application-dependent. For 
 
 ......
 
+```
+
+Use the logger:
+
+```
+gen_logger:new(my, info).
 ```
 
 ## License
