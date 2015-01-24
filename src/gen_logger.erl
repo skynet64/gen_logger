@@ -22,14 +22,17 @@
 
 -module(gen_logger).
 
+-include("gen_logger.hrl").
+
 %%%=========================================================================
 %%%  API
 %%%=========================================================================
--export([debug/1, debug/2,
-         info/1, info/2,
-         warning/1, warning/2,
-         error/1, error/2,
-         critical/1, critical/2]).
+-export([new/1, new/2,
+         debug/2, debug/3,
+         info/2, info/3,
+         warning/2, warning/3,
+         error/2, error/3,
+         critical/2, critical/3]).
 
 %%%=========================================================================
 %%%  Behaviour
@@ -38,23 +41,47 @@
 -ifdef(use_specs).
 
 %%%=========================================================================
+%%%  API Spec
+%%%=========================================================================
+-type level() :: all | debug | info | warning | error | critical | none.
+-type logmod() :: {gen_logger, mod(), level()}.
+
+-spec new(Level :: level()) -> logmod().
+-spec new(Name :: atom(), Level :: level()) -> logmod().
+
+-spec debug(Msg :: string(), Mod :: logmod()) -> ok.
+-spec debug(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+
+-spec info(Msg :: string(), Mod :: logmod()) -> ok. 
+-spec info(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+
+-spec warning(Msg :: string(), Mod :: logmod()) -> ok. 
+-spec warning(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+
+-spec error(Msg :: string(), Mod :: logmod()) -> ok. 
+-spec error(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+
+-spec critical(Msg :: string(), Mod :: logmod()) -> ok. 
+-spec critical(Format:: string(), Args :: list(), Mod :: logmod()) -> ok. 
+
+%%%=========================================================================
 %%%  Callbacks
 %%%=========================================================================
 
 -callback debug(Msg :: string()) -> ok. 
--callback debug(Msg :: string(), Args :: list()) -> ok. 
+-callback debug(Format :: string(), Args :: list()) -> ok. 
 
 -callback info(Msg :: string()) -> ok. 
--callback info(Msg :: string(), Args :: list()) -> ok. 
+-callback info(Format :: string(), Args :: list()) -> ok. 
 
 -callback warning(Msg :: string()) -> ok. 
--callback warning(Msg :: string(), Args :: list()) -> ok. 
+-callback warning(Format :: string(), Args :: list()) -> ok. 
 
 -callback error(Msg :: string()) -> ok. 
--callback error(Msg :: string(), Args :: list()) -> ok. 
+-callback error(Format :: string(), Args :: list()) -> ok. 
 
 -callback critical(Msg :: string()) -> ok. 
--callback critical(Msg :: string(), Args :: list()) -> ok. 
+-callback critical(Format:: string(), Args :: list()) -> ok. 
 
 -else.
 
@@ -72,37 +99,79 @@ behaviour_info(_Other) ->
 -endif.
 
 %%%=========================================================================
-%%%  error_logger default
+%%%  gen_logger API
 %%%=========================================================================
 
-debug(Msg) ->
-    error_logger:info_msg([" [debug] " | Msg]).
+new(Level) when is_atom(Level) ->
+    {?MODULE, ?MODULE, ?LOG_LEVEL_NUM(Level)}.
 
-debug(Format, Args) ->
-    error_logger:info_msg([" [debug] " | Format], Args).
+new(Name, Level) when is_atom(Name) and is_atom(Level) ->
+    {?MODULE, mod(Name), ?LOG_LEVEL_NUM(Level)}.
 
-info(Msg) ->
-    error_logger:info_msg([" [info] " | Msg]).
+mod(Name) ->
+    list_to_atom(atom_to_list(Name) ++ "_logger").
 
-info(Format, Args) ->
-    error_logger:info_msg([" [info] " | Format], Args).
+%%%-------------------------------------------------------------------------
+%%% DEBUG
+%%%-------------------------------------------------------------------------
+debug(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_DEBUG ->
+    Logger:debug(Msg);
+debug(_Msg, {?MODULE, _Logger, _Level}) ->
+    ok.
+debug(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_DEBUG ->
+    Logger:debug(Format, Args);
+debug(_Format, _Args, {?MODULE, _Logger, _Level}) ->
+    ok.
 
-warning(Msg) ->
-    error_logger:warning_msg([" [warning] " | Msg]).
+%%%-------------------------------------------------------------------------
+%%% INFO
+%%%-------------------------------------------------------------------------
+info(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_INFO ->
+    Logger:info(Msg);
+info(_Msg, {?MODULE, _Logger, _Level}) ->
+    ok.
 
-warning(Format, Args) ->
-    error_logger:warning_msg([" [warning] " | Format], Args).
+info(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_INFO ->
+    Logger:info(Format, Args);
+info(_Format, _Args, {?MODULE, _Logger, _Level}) ->
+    ok.
 
-error(Msg) ->
-    error_logger:error_msg([" [error] " | Msg]).
+%%%-------------------------------------------------------------------------
+%%% WARNING
+%%%-------------------------------------------------------------------------
+warning(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_WARNING ->
+    Logger:warning(Msg);
+warning(_Msg, {?MODULE, _Logger, _Level}) ->
+    ok.
 
-error(Format, Args) ->
-    error_logger:error_msg([" [error] " | Format], Args).
+warning(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_WARNING ->
+    Logger:warning(Format, Args);
+warning(_Format, _Args, {?MODULE, _Logger, _Level}) ->
+    ok.
+    
+%%%-------------------------------------------------------------------------
+%%% ERROR
+%%%-------------------------------------------------------------------------
+error(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_ERROR ->
+    Logger:error(Msg);
+error(_Msg, {?MODULE, _Logger, _Level}) ->
+    ok.
 
-critical(Msg) ->
-    error_logger:error_msg([" [critical] " | Msg]).
+error(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_ERROR ->
+    Logger:error(Format, Args);
+error(_Format, _Args, {?MODULE, _Logger, _Level}) ->
+    ok.
 
-critical(Format, Args) ->
-    error_logger:error_msg([" [critical] " | Format], Args).
+%%%-------------------------------------------------------------------------
+%%% CRITICAL
+%%%-------------------------------------------------------------------------
+critical(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_CRITICAL ->
+    Logger:critical(Msg);
+critical(_Msg, {?MODULE, _Logger, _Level}) ->
+    ok.
 
+critical(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_CRITICAL ->
+    Logger:critical(Format, Args);
+critical(_Format, _Args, {?MODULE, _Logger, _Level}) ->
+    ok.
 
