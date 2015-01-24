@@ -1,6 +1,6 @@
 # gen_logger
 
-Erlang gen_logger behaviour.
+Erlang gen_logger behavior.
 
 ## Why
 
