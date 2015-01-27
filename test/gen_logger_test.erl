@@ -46,6 +46,6 @@ critical_test() ->
     [Logger:critical("critical ~p", ["msg"]) || Logger <- loggers()].
 
 loggers() ->
-    [gen_logger:new(otp, warning), gen_logger:new(stdout, debug)].
+    [gen_logger:new({otp, warning}), gen_logger:new(stdout, debug)].
 
 -endif.

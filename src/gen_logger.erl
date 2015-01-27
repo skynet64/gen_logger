@@ -44,25 +44,55 @@
 %%%  API Spec
 %%%=========================================================================
 -type level() :: all | debug | info | warning | error | critical | none.
+
 -type logmod() :: {gen_logger, mod(), level()}.
 
--spec new(Level :: level()) -> logmod().
--spec new(Name :: atom(), Level :: level()) -> logmod().
+-spec new(LevelOrTuple) -> logmod() when
+      LevelOrTuple  :: level() | {atom(), level()}.
 
--spec debug(Msg :: string(), Mod :: logmod()) -> ok.
--spec debug(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+-spec new(Name, Level) -> logmod() when
+      Name  :: atom(),
+      Level :: level().
 
--spec info(Msg :: string(), Mod :: logmod()) -> ok. 
--spec info(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+-spec debug(Msg, Mod) -> ok when
+      Msg :: string(),
+      Mod :: logmod().
+-spec debug(Format, Args, Mod) -> ok when
+      Format :: string(),
+      Args   :: list(),
+      Mod    :: logmod().
 
--spec warning(Msg :: string(), Mod :: logmod()) -> ok. 
--spec warning(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+-spec info(Msg, Mod) -> ok when
+      Msg :: string(),
+      Mod :: logmod().
+-spec info(Format, Args, Mod) -> ok when
+      Format :: string(),
+      Args :: list(),
+      Mod :: logmod().
 
--spec error(Msg :: string(), Mod :: logmod()) -> ok. 
--spec error(Format :: string(), Args :: list(), Mod :: logmod()) -> ok. 
+-spec warning(Msg, Mod) -> ok when
+      Msg :: string(),
+      Mod :: logmod().
+-spec warning(Format, Args, Mod) -> ok when
+      Format :: string(),
+      Args :: list(),
+      Mod :: logmod().
 
--spec critical(Msg :: string(), Mod :: logmod()) -> ok. 
--spec critical(Format:: string(), Args :: list(), Mod :: logmod()) -> ok. 
+-spec error(Msg, Mod) -> ok when
+      Msg :: string(),
+      Mod :: logmod().
+-spec error(Format, Args, Mod) -> ok when
+      Format :: string(),
+      Args :: list(),
+      Mod :: logmod().
+
+-spec critical(Msg, Mod) -> ok when
+      Msg :: string(),
+      Mod :: logmod().
+-spec critical(Format, Args, Mod) -> ok when
+      Format:: string(),
+      Args :: list(),
+      Mod :: logmod().
 
 %%%=========================================================================
 %%%  Callbacks
@@ -103,7 +133,10 @@ behaviour_info(_Other) ->
 %%%=========================================================================
 
 new(Level) when is_atom(Level) ->
-    {?MODULE, ?MODULE, ?LOG_LEVEL_NUM(Level)}.
+    {?MODULE, ?MODULE, ?LOG_LEVEL_NUM(Level)};
+
+new({Name, Level}) ->
+    new(Name, Level).
 
 new(Name, Level) when is_atom(Name) and is_atom(Level) ->
     {?MODULE, mod(Name), ?LOG_LEVEL_NUM(Level)}.
