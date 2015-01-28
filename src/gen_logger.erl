@@ -43,9 +43,12 @@
 %%%=========================================================================
 %%%  API Spec
 %%%=========================================================================
+
 -type level() :: all | debug | info | warning | error | critical | none.
 
--type logmod() :: {gen_logger, mod(), level()}.
+-type logmod() :: {gen_logger, module(), level()}.
+
+-export_type([logmod/0]).
 
 -spec new(LevelOrTuple) -> logmod() when
       LevelOrTuple  :: level() | {atom(), level()}.
