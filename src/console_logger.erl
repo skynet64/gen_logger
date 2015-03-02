@@ -1,3 +1,4 @@
+%%------------------------------------------------------------------------------
 %% Copyright (c) 2015, Feng Lee <feng@emqtt.io>
 %% 
 %% Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +20,7 @@
 %% SOFTWARE.
 %%------------------------------------------------------------------------------
 
--module(stdout_logger).
+-module(console_logger).
 
 -import(lists, [concat/1]).
 

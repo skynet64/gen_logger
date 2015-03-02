@@ -2,6 +2,13 @@
 ChangeLog
 ==================
 
+v0.3.1-beta (2015-03-02)
+------------------------
+
+have to depend on lager for 'lager_transform'
+
+rename 'stdout_logger' to 'console_logger'
+
 v0.3-beta (2015-03-02)
 ------------------------
 

@@ -136,7 +136,7 @@ behaviour_info(_Other) ->
 %%%=========================================================================
 
 new(Level) when is_atom(Level) ->
-    new(stdout, Level);
+    new(console, Level);
 
 new({Name, Level}) ->
     new(Name, Level).
