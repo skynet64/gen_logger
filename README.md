@@ -35,8 +35,8 @@ gen_logger:new(debug).
 %lager with debug
 gen_logger:new(lager, debug).
 
-%otp with info
-gen_logger:new(otp, info).
+%error_logger with info
+gen_logger:new(error_logger, info).
 
 %io:format error
 gen_logger:new(stdout, error).

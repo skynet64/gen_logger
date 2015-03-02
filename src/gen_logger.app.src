@@ -2,7 +2,7 @@
  [
   {description, "An Erlang gen_logger library"},
   {vsn, git},
-  {modules, [ ]},
+  {modules, []},
   {registered, []},
   {applications, [
                   kernel,

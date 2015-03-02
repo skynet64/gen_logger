@@ -19,7 +19,7 @@
 %% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 %% SOFTWARE.
 %%------------------------------------------------------------------------------
--module(otp_logger).
+-module(error_logger_logger).
 
 -behavior(gen_logger).
 
