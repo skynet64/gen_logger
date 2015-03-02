@@ -2,7 +2,7 @@
 ChangeLog
 ==================
 
-v0.3.1-beta (2015-03-02)
+v0.4-beta (2015-03-03)
 ------------------------
 
 have to depend on lager for 'lager_transform'
