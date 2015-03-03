@@ -32,14 +32,17 @@ Logger:error("format error msg", []).
 
 gen_logger:new(debug).
 
-%lager with debug
+%lager with info level
+gen_logger:new({lager, info}).
+
+%lager with debug level
 gen_logger:new(lager, debug).
 
-%error_logger with info
+%error_logger with info level
 gen_logger:new(error_logger, info).
 
-%io:format error
-gen_logger:new(stdout, error).
+%io:format with error level
+gen_logger:new(console, error).
 ```
 
 ## Behavior
