@@ -1,7 +1,7 @@
 {application, gen_logger,
  [
   {description, "An Erlang gen_logger library"},
-  {vsn, git},
+  {vsn, "1.0"},
   {modules, []},
   {registered, []},
   {applications, [
