@@ -1,14 +1,6 @@
-# gen_logger
+# Erlang gen_logger behavior.
 
-Erlang gen_logger behavior.
-
-## Why
-
-When writing an erlang library, the logger is usally application-dependent. For exmaple, [emqttc] (https://github.com/emqtt/emqttc) library used in application with 'lager' logger: 
-
-```
-{ok, C} = emqttc:start_link([{host, "localhost"}, {logger, {lager, info}}]).
-```
+The logger mechanism is usaully application-dependent for an erlang library.
 
 ## Usage
 
