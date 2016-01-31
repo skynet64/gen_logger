@@ -46,7 +46,7 @@
 
 -type logmod() :: {gen_logger, module(), level()}.
 
--export_type([level/0, logcfg/0]).
+-export_type([level/0, logcfg/0, logmod/0]).
 
 %%%=========================================================================
 %%% Behaviour Callbacks
