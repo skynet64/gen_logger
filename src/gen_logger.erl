@@ -1,5 +1,5 @@
 %%%-----------------------------------------------------------------------------
-%%% Copyright (c) 2015, Feng Lee <feng@emqtt.io>
+%%% Copyright (c) 2014-2016 Feng Lee <feng@emqtt.io>. All Rights Reserved.
 %%%
 %%% Permission is hereby granted, free of charge, to any person obtaining a copy
 %%% of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,8 @@
 
 -module(gen_logger).
 
+-author("Feng Lee <feng@emqtt.io>").
+
 -include("gen_logger.hrl").
 
 %%%=========================================================================
@@ -40,9 +42,11 @@
 
 -type level() :: all | debug | info | warning | error | critical | none.
 
+-type logcfg() :: level() | {module(), level()}.
+
 -type logmod() :: {gen_logger, module(), level()}.
 
--export_type([level/0, logmod/0]).
+-export_type([level/0, logcfg/0]).
 
 %%%=========================================================================
 %%% Behaviour Callbacks
@@ -50,20 +54,20 @@
 
 -ifdef(use_specs).
 
--callback debug(Msg :: string()) -> ok. 
--callback debug(Format :: string(), Args :: list()) -> ok. 
+-callback debug(Msg :: string()) -> ok.
+-callback debug(Format :: io:format(), Args :: [term()]) -> ok.
 
--callback info(Msg :: string()) -> ok. 
--callback info(Format :: string(), Args :: list()) -> ok. 
+-callback info(Msg :: string()) -> ok.
+-callback info(Format :: io:format(), Args :: [term()]) -> ok.
 
--callback warning(Msg :: string()) -> ok. 
--callback warning(Format :: string(), Args :: list()) -> ok. 
+-callback warning(Msg :: string()) -> ok.
+-callback warning(Format :: io:format(), Args :: [term()]) -> ok.
 
--callback error(Msg :: string()) -> ok. 
--callback error(Format :: string(), Args :: list()) -> ok. 
+-callback error(Msg :: string()) -> ok.
+-callback error(Format :: io:format(), Args :: [term()]) -> ok.
 
--callback critical(Msg :: string()) -> ok. 
--callback critical(Format:: string(), Args :: list()) -> ok. 
+-callback critical(Msg :: string()) -> ok.
+-callback critical(Format:: io:format(), Args :: [term()]) -> ok.
 
 -else.
 
@@ -84,37 +88,27 @@ behaviour_info(_Other) ->
 %%% gen_logger API
 %%%=========================================================================
 
--spec new(LevelOrTuple) -> logmod() when
-      LevelOrTuple  :: level() | {atom(), level()}.
-new(Level) when is_atom(Level) ->
-    new(console, Level);
-new({Name, Level}) ->
-    new(Name, Level).
+-spec new(Level :: level()) -> logmod();
+         ({Name :: atom(), Level :: level()})  -> logmod().
+new(Level) when is_atom(Level) -> new(console, Level);
+new({Name, Level}) -> new(Name, Level).
 
--spec new(Name, Level) -> logmod() when
-      Name  :: atom(),
-      Level :: level().
+-spec new(Name :: atom(), Level :: level()) -> logmod().
 new(Name, Level) when is_atom(Name) and is_atom(Level) ->
-    {?MODULE, mod(Name), ?LOG_LEVEL_NUM(Level)}.
+    {?MODULE, logmod(Name), ?LOG_LEVEL_NUM(Level)}.
 
-mod(Name) ->
-    list_to_atom(atom_to_list(Name) ++ "_logger").
+logmod(Name) -> list_to_atom(lists:concat([Name, "_logger"])).
 
 %%%-------------------------------------------------------------------------
 %%% DEBUG
 %%%-------------------------------------------------------------------------
--spec debug(Msg, Mod) -> ok when
-      Msg :: string(),
-      Mod :: logmod().
+-spec debug(Msg :: string(), Mod :: logmod()) -> ok.
 debug(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_DEBUG ->
     Logger:debug(Msg);
 debug(_Msg, {?MODULE, _Logger, _Level}) ->
     ok.
 
--spec debug(Format, Args, Mod) -> ok when
-      Format :: string(),
-      Args   :: list(),
-      Mod    :: logmod().
+-spec debug(Format :: io:format(), Args :: [term()], Mod :: logmod()) -> ok.
 debug(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_DEBUG ->
     Logger:debug(Format, Args);
 debug(_Format, _Args, {?MODULE, _Logger, _Level}) ->
@@ -123,18 +117,13 @@ debug(_Format, _Args, {?MODULE, _Logger, _Level}) ->
 %%%-------------------------------------------------------------------------
 %%% INFO
 %%%-------------------------------------------------------------------------
--spec info(Msg, Mod) -> ok when
-      Msg :: string(),
-      Mod :: logmod().
+-spec info(Msg :: string(), Mod :: logmod()) -> ok.
 info(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_INFO ->
     Logger:info(Msg);
 info(_Msg, {?MODULE, _Logger, _Level}) ->
     ok.
 
--spec info(Format, Args, Mod) -> ok when
-      Format :: string(),
-      Args :: list(),
-      Mod :: logmod().
+-spec info(Format :: io:format(), Args :: [term()], Mod :: logmod()) -> ok.
 info(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_INFO ->
     Logger:info(Format, Args);
 info(_Format, _Args, {?MODULE, _Logger, _Level}) ->
@@ -143,18 +132,13 @@ info(_Format, _Args, {?MODULE, _Logger, _Level}) ->
 %%%-------------------------------------------------------------------------
 %%% WARNING
 %%%-------------------------------------------------------------------------
--spec warning(Msg, Mod) -> ok when
-      Msg :: string(),
-      Mod :: logmod().
+-spec warning(Msg :: string(), Mod :: logmod()) -> ok.
 warning(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_WARNING ->
     Logger:warning(Msg);
 warning(_Msg, {?MODULE, _Logger, _Level}) ->
     ok.
 
--spec warning(Format, Args, Mod) -> ok when
-      Format :: string(),
-      Args :: list(),
-      Mod :: logmod().
+-spec warning(Format :: io:format(), Args :: [term()], Mod :: logmod()) -> ok.
 warning(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_WARNING ->
     Logger:warning(Format, Args);
 warning(_Format, _Args, {?MODULE, _Logger, _Level}) ->
@@ -163,18 +147,13 @@ warning(_Format, _Args, {?MODULE, _Logger, _Level}) ->
 %%%-------------------------------------------------------------------------
 %%% ERROR
 %%%-------------------------------------------------------------------------
--spec error(Msg, Mod) -> ok when
-      Msg :: string(),
-      Mod :: logmod().
+-spec error(Msg :: string(), Mod :: logmod()) -> ok.
 error(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_ERROR ->
     Logger:error(Msg);
 error(_Msg, {?MODULE, _Logger, _Level}) ->
     ok.
 
--spec error(Format, Args, Mod) -> ok when
-      Format :: string(),
-      Args :: list(),
-      Mod :: logmod().
+-spec error(Format :: io:format(), Args :: [term()], Mod :: logmod()) -> ok.
 error(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_ERROR ->
     Logger:error(Format, Args);
 error(_Format, _Args, {?MODULE, _Logger, _Level}) ->
@@ -183,18 +162,13 @@ error(_Format, _Args, {?MODULE, _Logger, _Level}) ->
 %%%-------------------------------------------------------------------------
 %%% CRITICAL
 %%%-------------------------------------------------------------------------
--spec critical(Msg, Mod) -> ok when
-      Msg :: string(),
-      Mod :: logmod().
+-spec critical(Msg :: string(), Mod :: logmod()) -> ok.
 critical(Msg, {?MODULE, Logger, Level}) when Level =< ?LOG_CRITICAL ->
     Logger:critical(Msg);
 critical(_Msg, {?MODULE, _Logger, _Level}) ->
     ok.
 
--spec critical(Format, Args, Mod) -> ok when
-      Format:: string(),
-      Args :: list(),
-      Mod :: logmod().
+-spec critical(Format :: io:format(), Args :: [term()], Mod :: logmod()) -> ok.
 critical(Format, Args, {?MODULE, Logger, Level}) when Level =< ?LOG_CRITICAL ->
     Logger:critical(Format, Args);
 critical(_Format, _Args, {?MODULE, _Logger, _Level}) ->
