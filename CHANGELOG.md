@@ -2,6 +2,14 @@
 ChangeLog
 ==================
 
+v1.1-beta (2016-01-31)
+------------------------
+
+Fix specs of gen_logger API
+
+Define and export logcfg() type
+
+
 v1.0.1-beta (2015-04-40)
 ------------------------
 
