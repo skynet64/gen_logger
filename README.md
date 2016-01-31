@@ -1,11 +1,10 @@
-# Erlang gen_logger behavior.
+# Erlang gen_logger behaviour.
 
-The logger mechanism is usaully application-dependent for an erlang library.
+The logger is usually application-dependent for a client side library.
 
 ## Usage
 
 ```
-
 Logger = gen_logger:new(debug).
 
 Logger:info("hello...").
@@ -13,8 +12,16 @@ Logger:info("format: ~p", ["hello"]).
 
 Logger:error("error msg").
 Logger:error("format error msg", []).
+```
 
+[emqttc](https://github.com/emqtt/emqttc) for example, start a client with different logger:
 
+```
+%% start with lager
+emqttc:start_link([{logger, {lager, info}}]).
+
+%% start with error_logger
+emqttc:start_link([{logger, {error_logger, error}}]).
 ```
 
 # API 
@@ -37,16 +44,15 @@ gen_logger:new(error_logger, info).
 gen_logger:new(console, error).
 ```
 
-## Behavior
+## Behaviour
 
 ```
--behavior(gen_logger).
+-behaviour(gen_logger).
 ```
 
 ## Callbacks
 
 ```
-
 -callback debug(Msg :: string()) -> ok. 
 -callback debug(Msg :: string(), Args :: list()) -> ok. 
 
@@ -61,10 +67,9 @@ gen_logger:new(console, error).
 
 -callback critical(Msg :: string()) -> ok. 
 -callback critical(Msg :: string(), Args :: list()) -> ok. 
-
 ```
 
-## Define a logger
+## Define my logger
 
 ```
 -module(my_logger).
@@ -78,10 +83,9 @@ gen_logger:new(console, error).
          critical/1, critical/2]).
 
 ......
-
 ```
 
-Use the logger:
+New my logger:
 
 ```
 gen_logger:new(my, info).
