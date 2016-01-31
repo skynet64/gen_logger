@@ -1,4 +1,4 @@
-all: get-deps compile
+all: compile
 
 get-deps:
 	rebar get-deps
@@ -8,3 +8,6 @@ compile:
 	
 eunit:
 	rebar eunit
+
+clean:
+	rebar clean
