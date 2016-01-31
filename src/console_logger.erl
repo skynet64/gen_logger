@@ -1,5 +1,5 @@
 %%%-----------------------------------------------------------------------------
-%%% Copyright (c) 2015, Feng Lee <feng@emqtt.io>
+%%% Copyright (c) 2014-2016 Feng Lee <feng@emqtt.io>. All Rights Reserved.
 %%%
 %%% Permission is hereby granted, free of charge, to any person obtaining a copy
 %%% of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,11 @@
 
 -module(console_logger).
 
+-author("Feng Lee <feng@emqtt.io>").
+
 -import(lists, [concat/1]).
 
--behavior(gen_logger).
+-behaviour(gen_logger).
 
 -export([debug/1, debug/2,
          info/1, info/2,
@@ -35,6 +37,7 @@
 %%%=========================================================================
 %%% io:format
 %%%=========================================================================
+
 debug(Msg) ->
     io:format(concat(["[debug] ", Msg, "\n"])).
 
