@@ -1,4 +1,4 @@
-# Erlang gen_logger behaviour.
+# Erlang gen_logger behaviour
 
 The logger is usually application-dependent for a client side library.
 
