@@ -1,6 +1,6 @@
 # Erlang gen_logger behaviour
 
-The logger is usually application-dependent for a client side library.
+A general logger behaviour for erlang applications.
 
 ## Usage
 
