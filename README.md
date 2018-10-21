@@ -1,4 +1,6 @@
-# Erlang gen_logger behaviour
+# GEN_LOGGER
+
+[![Build Status](https://travis-ci.org/voxoz/gen_logger.svg?branch=master)](https://travis-ci.org/voxoz/gen_logger)
 
 A general logger behaviour for erlang applications.
 
