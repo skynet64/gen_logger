@@ -26,7 +26,7 @@
 
 -import(lists, [concat/1]).
 
--behaviour(gen_logger).
+%-behaviour(gen_logger).
 
 -export([debug/1, debug/2,
          info/1, info/2,
